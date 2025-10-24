@@ -1,17 +1,36 @@
 import React, { useState } from "react";
 import "../style/css/Login.css";
 
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../redux/userSlice";
+import { useNavigate } from "react-router-dom";
+
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
-  
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+     
     const handleSubmit = (e) => {
       e.preventDefault();
       console.log("Username:", username);
       console.log("Password:", password);
       console.log("Remember me:", rememberMe);
-      // TODO: ici tu feras l’appel API pour authentifier
+
+      const fakeUser = {
+        firstName: "John",
+        lastName: "Doe",
+        email : "T4oqo@example.com"
+      }
+      
+      const fakeToken = "abc123token";
+
+      dispatch(loginSuccess({ user: fakeUser, token: fakeToken }));
+
+      console.log("connexion réussi")
+      navigate("/profile");
     };
 
     return (

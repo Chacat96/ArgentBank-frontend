@@ -46,3 +46,25 @@
   width: 1px !important;
   white-space: nowrap !important; /* 3 */
 }
+
+.main-nav-itemLogout {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.main-nav-itemLogout__user {
+  display: flex;
+  gap: 5px;
+  font-weight: bold;
+}
+.main-nav-itemLogout__logout {
+  display: flex;
+  gap: 5px;
+  background-color: transparent;
+  padding: 10px;
+  border: none;
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 16px;
+  cursor: pointer;
+}

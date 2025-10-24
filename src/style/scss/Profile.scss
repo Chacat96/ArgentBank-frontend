@@ -77,3 +77,30 @@
     font-weight: bold;
     padding: 10px;
   }
+
+
+  //***********Edite name
+  .edit-form-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .edit-form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    &__input {
+      padding: 10px;
+    }
+  }
+
+  .edit-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    &__btn {
+      padding: 10px 20px;
+    }
+  }

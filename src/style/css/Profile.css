@@ -77,3 +77,27 @@
   font-weight: bold;
   padding: 10px;
 }
+
+.edit-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.edit-form__input {
+  padding: 10px;
+}
+
+.edit-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.edit-buttons__btn {
+  padding: 10px 20px;
+}
