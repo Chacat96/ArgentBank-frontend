@@ -3,34 +3,43 @@ import "../style/css/Login.css";
 
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../redux/userSlice";
+import { loginUser } from "../services/service";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
      
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
-      console.log("Username:", username);
-      console.log("Password:", password);
-      console.log("Remember me:", rememberMe);
 
-      const fakeUser = {
-        firstName: "John",
-        lastName: "Doe",
-        email : "T4oqo@example.com"
+      try {
+        const data = await loginUser(email, password);
+        const token = data.body.token;
+
+        dispatch(loginSuccess({ user: null, token }));
+
+        navigate("/profile");
+      } catch (error) {
+        console.error("Erreur de connexion :", error);
       }
+
+    //   const fakeUser = {
+    //     firstName: "John",
+    //     lastName: "Doe",
+    //     email : "T4oqo@example.com"
+    //   }
       
-      const fakeToken = "abc123token";
+    //   const fakeToken = "abc123token";
 
-      dispatch(loginSuccess({ user: fakeUser, token: fakeToken }));
+    //   dispatch(loginSuccess({ user: fakeUser, token: fakeToken }));
 
-      console.log("connexion réussi")
-      navigate("/profile");
+    //   console.log("connexion réussi")
+    //   navigate("/profile");
     };
 
     return (
@@ -44,8 +53,9 @@ const Login = () => {
                         <input
                         type="text"
                         id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        autoComplete="username"
                         />
                     </div>
                     <div className="input-wrapper">
@@ -55,6 +65,7 @@ const Login = () => {
                         id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        autoComplete="current-password"
                         />
                     </div>
                     <div className="input-remember">
