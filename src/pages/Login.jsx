@@ -10,37 +10,44 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
+    const [error, setError] = useState("");
+    
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
      
     const handleSubmit = async (e) => {
-      e.preventDefault();
+        e.preventDefault()
+        setError("");
+    
+        try {
+          const data = await loginUser(email, password)
+          sessionStorage.setItem("token", data.body.token)
 
-      try {
-        const data = await loginUser(email, password);
-        const token = data.body.token;
+          const token = data?.body?.token;
+          
+          if (!token) {
+            setError("Invalid credentials");
+            return;
+          }
 
-        dispatch(loginSuccess({ user: null, token }));
+          if (rememberMe) {
+            localStorage.setItem("token", token);
+          }
 
-        navigate("/profile");
-      } catch (error) {
-        console.error("Erreur de connexion :", error);
+          dispatch(
+            loginSuccess({
+              user: data.body,
+              token: data.body.token
+            })
+          )
+          navigate("/profile")
+    
+        } catch (err) {
+          console.error("Erreur de connexion :", err);
+          setError("Email ou mot de passe incorrect");
+        }
       }
-
-    //   const fakeUser = {
-    //     firstName: "John",
-    //     lastName: "Doe",
-    //     email : "T4oqo@example.com"
-    //   }
-      
-    //   const fakeToken = "abc123token";
-
-    //   dispatch(loginSuccess({ user: fakeUser, token: fakeToken }));
-
-    //   console.log("connexion réussi")
-    //   navigate("/profile");
-    };
 
     return (
             <main className="main bg-dark">
@@ -48,6 +55,17 @@ const Login = () => {
                     <i className="fa fa-user-circle sign-in-icon"></i>
                     <h1>Sign In</h1>
                     <form onSubmit={handleSubmit}>
+
+                    {error && (  
+                        <div className="error-message" style={{
+                            color: 'red', 
+                            marginBottom: '1rem',
+                            textAlign: 'center'
+                        }}>
+                            {error}
+                        </div>
+                    )}
+
                     <div className="input-wrapper">
                         <label htmlFor="username">Username</label>
                         <input

@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from './redux/userSlice';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
 
@@ -7,8 +9,16 @@ import Accueil from './pages/Accueil';
 import Profile from './pages/Profile';
 import Layout from './pages/Layout';
 
+
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    const token = localStorage.getItem("token") ?? sessionStorage.getItem("token");
+    if (token) {
+      dispatch(loginSuccess({ token }));
+    }
+  }, []);
 
   return (
     <Router>

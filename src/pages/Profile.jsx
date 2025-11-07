@@ -1,10 +1,9 @@
 import "../style/css/Profile.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
-import { updateUserProfile } from "../services/service";
+import { getUserProfile, updateUserProfile } from "../services/service";
 import { updateUser } from "../redux/userSlice";
 
 const Profile = () => {
@@ -17,30 +16,36 @@ const Profile = () => {
     const [firstName, setFirstName] = useState(user?.firstName || "")
     const [lastName, setLastName] = useState(user?.lastName || "")
 
+    //Fonction de chargement du profil
+    useEffect(() => {
+        async function fetchProfile() {
+            try {
+                const profileData = await getUserProfile(token);
 
-
-    //Fonction de déconnexion
-    const handleLogout = () => {
-        dispatch(logout());
-        navigate("/login");
-    }
+                dispatch(updateUser(profileData));
+            } catch (error) {
+                console.error("Erreur de chargement du profil :", error);
+            }
+        }
+        if (token) {
+            fetchProfile();
+        } else {
+            navigate("/login");
+        }
+    }, [token, dispatch]);
 
     //Fonction pour sauvegader le nom
-    // const handleSave = async () => {
-    //     try {
-    //       const updatedUser = await updateUserProfile(firstName, lastName, token);
-    //       if (updatedUser?.body) {
-    //         dispatch(updateUser(updatedUser.body));
-    //         setIsEditing(false);
-    //       }
-    //     } catch (error) {
-    //       console.error("Erreur de mise à jour du profil :", error);
-    //     }
-    //   };
-    const handleSave = () => {
-        dispatch(updateUser({ firstName, lastName }))
-        setIsEditing(false)
-      }
+    const handleSave = async () => {
+        try {
+          const updatedUser = await updateUserProfile(firstName, lastName, token);
+          if (updatedUser?.body) {
+            dispatch(updateUser(updatedUser.body));
+            setIsEditing(false);
+          }
+        } catch (error) {
+          console.error("Erreur de mise à jour du profil :", error);
+        }
+      };
 
     //Fonction d'édition du nom
     const handleEditClick = () => {
@@ -52,15 +57,6 @@ const Profile = () => {
     const handleCancel = () => {
         setIsEditing(false);
     };
-
-    if (!user) {
-        return (
-            <main className="main bg-dark">
-                <h1>Not logged in</h1>
-                <button onClick={handleLogout}>Logout</button>
-            </main>
-        )
-    }
 
     return (
         <main className="main bg-dark">
@@ -98,7 +94,7 @@ const Profile = () => {
                 <h1>
                 Welcome back
                 <br />
-                {user.firstName} {user.lastName}!
+                {user?.firstName} {user?.lastName}!
                 </h1>
                 <button className="edit-button" onClick={handleEditClick}>
                 Edit Name
