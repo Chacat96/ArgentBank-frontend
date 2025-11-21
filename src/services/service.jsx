@@ -13,8 +13,6 @@
 //   }
 // Connexion 
 export async function loginUser(email, password) {
-    console.log("🔵 [loginUser] email :", email);
-    console.log("🔵 [loginUser] password :", password);
     const res = await fetch("/api/v1/user/login", {
       method: "POST",
       credentials: "include",
@@ -23,16 +21,13 @@ export async function loginUser(email, password) {
       },
       body: JSON.stringify({ email, password }),
     });
-    console.log("🟠 [loginUser] Response OK ?", res.ok);
     if (!res.ok) throw new Error("Erreur API login");
     const data = await res.json();
-    console.log("🟢 [loginUser] Data reçue :", data);
-    return data;
+    return data.body;
   }
   
   // Profil 
   export async function getUserProfile(token) {
-    console.log("🔵 [getUserProfile] Token reçu :", token);
     const res = await fetch("http://localhost:3001/api/v1/user/profile", {
       method: "POST",
       headers: {
@@ -40,10 +35,8 @@ export async function loginUser(email, password) {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("🟠 [getUserProfile] Response OK ?", res.ok);
     if (!res.ok) throw new Error("Erreur API get profile");
     const data = await res.json();
-    console.log("🟢 [getUserProfile] Data reçue :", data);
     return data.body;
   }
   
@@ -61,7 +54,7 @@ export async function loginUser(email, password) {
     if (!res.ok) throw new Error("Erreur API update profile");
     const data = await res.json();
 
-    return data;
+    return data.body;
   }
   
   // Inscription 

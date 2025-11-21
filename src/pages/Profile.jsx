@@ -13,8 +13,9 @@ const Profile = () => {
     const token = useSelector((state) => state.user.token);
 
     const [isEditing, setIsEditing] = useState(false);
-    const [firstName, setFirstName] = useState(user?.firstName || "")
-    const [lastName, setLastName] = useState(user?.lastName || "")
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [error, setError] = useState("");
 
     //Fonction de chargement du profil
     useEffect(() => {
@@ -32,18 +33,30 @@ const Profile = () => {
         } else {
             navigate("/login");
         }
-    }, [token, dispatch]);
+    }, [token, dispatch, navigate]);
 
+    //Fonction de mise à jour du profil
+    useEffect(() => {
+        if (user) {
+          setFirstName(user.firstName);
+          setLastName(user.lastName);
+        }
+      }, [user]);
+      
     //Fonction pour sauvegader le nom
     const handleSave = async () => {
         try {
+          setError("");
           const updatedUser = await updateUserProfile(firstName, lastName, token);
-          if (updatedUser?.body) {
-            dispatch(updateUser(updatedUser.body));
+          if (updatedUser) {
+            dispatch(updateUser(updatedUser));
             setIsEditing(false);
+          } else {
+            throw new Error("Erreur de mise à jour du profil");
           }
-        } catch (error) {
-          console.error("Erreur de mise à jour du profil :", error);
+        } catch (err) {
+          console.error("Erreur de mise à jour du profil :", err);
+          setError( "Erreur de mise à jour du profil");
         }
       };
 
@@ -64,6 +77,7 @@ const Profile = () => {
             {isEditing ? (
             <>
                 <h1>Welcome back</h1>
+                {error && <p className="error">{error}</p>}
                 <div className="edit-form-wrapper">
                 <div className="edit-form">
                 <input
@@ -94,6 +108,7 @@ const Profile = () => {
                 <h1>
                 Welcome back
                 <br />
+                {error && <p className="error">{error}</p>}
                 {user?.firstName} {user?.lastName}!
                 </h1>
                 <button className="edit-button" onClick={handleEditClick}>

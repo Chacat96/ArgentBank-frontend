@@ -22,9 +22,9 @@ const Login = () => {
     
         try {
           const data = await loginUser(email, password)
-          sessionStorage.setItem("token", data.body.token)
+          sessionStorage.setItem("token", data.token)
 
-          const token = data?.body?.token;
+          const token = data?.token;
           
           if (!token) {
             setError("Invalid credentials");
@@ -37,8 +37,8 @@ const Login = () => {
 
           dispatch(
             loginSuccess({
-              user: data.body,
-              token: data.body.token
+              user: data,
+              token: data.token
             })
           )
           navigate("/profile")
