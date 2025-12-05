@@ -7,7 +7,7 @@ const initialState = {
   isLoggedIn: false
 }
 
-// Création du slice
+// Création du slice pour gérer l'etat de l'utilisateur
 const userSlice = createSlice({
   name: 'user',
   initialState,

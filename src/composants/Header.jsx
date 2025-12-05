@@ -15,8 +15,8 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
-    dispatch(logout());     
-    navigate("/login");    
+    dispatch(logout());   
+    navigate("/");    
   };
     
     return (

@@ -13,12 +13,13 @@ import Layout from './pages/Layout';
 function App() {
   const dispatch = useDispatch();
   
+  // Vérifier si le token est présent dans le localStorage ou sessionStorage
   useEffect(() => {
     const token = localStorage.getItem("token") ?? sessionStorage.getItem("token");
     if (token) {
       dispatch(loginSuccess({ token }));
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <Router>
