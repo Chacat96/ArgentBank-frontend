@@ -30,8 +30,6 @@ const Profile = () => {
         }
         if (token) {
             fetchProfile();
-        } else {
-            navigate("/");
         }
     }, [token, dispatch, navigate]);
 

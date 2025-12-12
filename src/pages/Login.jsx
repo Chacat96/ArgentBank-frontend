@@ -37,7 +37,7 @@ const Login = () => {
 
           dispatch(
             loginSuccess({
-              user: data,
+              user: data.body,
               token: data.token
             })
           )

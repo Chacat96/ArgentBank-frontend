@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { getUserProfile } from './services/service';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from './redux/userSlice';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
@@ -17,9 +18,18 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token") ?? sessionStorage.getItem("token");
     if (token) {
-      dispatch(loginSuccess({ token }));
+      async function restoreSession() {
+        try {
+          const profileData = await getUserProfile(token);
+          dispatch(loginSuccess({ user: profileData.body, token }));
+        } catch (error) {
+          console.error("Impossible de restaurer la session", error);
+        }
+      }
+      restoreSession();
     }
   }, [dispatch]);
+  
 
   return (
     <Router>
